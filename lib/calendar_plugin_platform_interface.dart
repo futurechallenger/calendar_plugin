@@ -27,7 +27,8 @@ abstract class CalendarPluginPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String?> addEventToCalendar(String eventName) {
+  Future<String?> addEventToCalendar(String content, String note,
+      [DateTime? start, DateTime? end]) {
     throw UnimplementedError();
   }
 }
