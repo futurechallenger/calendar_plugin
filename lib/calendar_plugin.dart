@@ -8,6 +8,6 @@ class CalendarPlugin {
   Future<String?> addEventToCalendar(String content, String note,
       [DateTime? start, DateTime? end]) {
     return CalendarPluginPlatform.instance
-        .addEventToCalendar(content, node, start, end);
+        .addEventToCalendar(content, note, start, end);
   }
 }
