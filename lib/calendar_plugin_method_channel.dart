@@ -17,7 +17,9 @@ class MethodChannelCalendarPlugin extends CalendarPluginPlatform {
   }
 
   @override
-  Future<String?> addEventToCalendar(String eventName) {
-    return methodChannel.invokeMethod<String>('addEventToCalendar');
+  Future<String?> addEventToCalendar(String content, String note,
+      [DateTime? start, DateTime? end]) {
+    return methodChannel.invokeMethod<String>('addEventToCalendar',
+        {'content': content, 'note': note, 'start': start, 'end': end});
   }
 }

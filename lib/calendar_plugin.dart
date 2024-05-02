@@ -5,7 +5,9 @@ class CalendarPlugin {
     return CalendarPluginPlatform.instance.getPlatformVersion();
   }
 
-  Future<String?> addEventToCalendar(String eventName) {
-    return CalendarPluginPlatform.instance.addEventToCalendar(eventName);
+  Future<String?> addEventToCalendar(String content, String note,
+      [DateTime? start, DateTime? end]) {
+    return CalendarPluginPlatform.instance
+        .addEventToCalendar(content, note, start, end);
   }
 }
