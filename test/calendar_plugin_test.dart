@@ -11,8 +11,13 @@ class MockCalendarPluginPlatform
   Future<String?> getPlatformVersion() => Future.value('42');
 
   @override
-  Future<String?> addEventToCalendar(String eventName) {
-    return Future.value(eventName);
+  Future<String?> addEventToCalendar(
+    String content, [
+    String? note,
+    DateTime? start,
+    DateTime? end,
+  ]) {
+    return Future.value(content);
   }
 }
 
