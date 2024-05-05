@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:calendar_plugin/calendar_plugin.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -66,13 +67,20 @@ class _MyAppState extends State<MyApp> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  _calendarPlugin
-                      .addEventToCalendar("hello", "hello world")
-                      .then((value) {
-                    debugPrint("ret is $value");
-                    setState(() {
-                      _eventName = value ?? '';
-                    });
+                  Permission.calendarFullAccess.request().then((status) {
+                    if (status.isGranted) {
+                      debugPrint("calendar full access is granted");
+                      _calendarPlugin
+                          .addEventToCalendar("hello", "hello world")
+                          .then((value) {
+                        debugPrint("ret is $value");
+                        setState(() {
+                          _eventName = value ?? '';
+                        });
+                      });
+                    } else {
+                      debugPrint("calendar full access is denied");
+                    }
                   });
                 },
                 child: const Text("OK")),
