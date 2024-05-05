@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:calendar_plugin/calendar_plugin.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,6 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  String _eventName = '';
   final _calendarPlugin = CalendarPlugin();
 
   @override
@@ -31,8 +33,8 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _calendarPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      platformVersion = await _calendarPlugin.getPlatformVersion() ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -54,8 +56,35 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: [
+            Center(
+              child: Text('Running on: $_platformVersion\n'),
+            ),
+            const Divider(),
+            Center(
+              child: Text('Added event $_eventName\n'),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Permission.calendarFullAccess.request().then((status) {
+                    if (status.isGranted) {
+                      debugPrint("calendar full access is granted");
+                      _calendarPlugin
+                          .addEventToCalendar("hello", "hello world")
+                          .then((value) {
+                        debugPrint("ret is $value");
+                        setState(() {
+                          _eventName = value ?? '';
+                        });
+                      });
+                    } else {
+                      debugPrint("calendar full access is denied");
+                    }
+                  });
+                },
+                child: const Text("OK")),
+          ],
         ),
       ),
     );

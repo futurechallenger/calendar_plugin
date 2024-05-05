@@ -24,6 +24,8 @@ public class CalendarPlugin: NSObject, FlutterPlugin {
         guard let args = call.arguments as? [String : Any] else {return}
         let title = args["content"] as? String
         let note = args["note"] as? String
+        let start = args["start"] as? Date 
+        let end = args["end"] as? Date 
         
         if title == nil {
           result(FlutterError(code: "Invalid parameters", message: "Title is invalid or empty", details: nil))
@@ -39,15 +41,18 @@ public class CalendarPlugin: NSObject, FlutterPlugin {
             let event:EKEvent = EKEvent(eventStore: eventStore)
             
             event.title = title
-            event.startDate = Date()
-            event.endDate = Date()
+            event.startDate = start ?? Date()
+            event.endDate = end ?? Date()
             event.notes = note ?? "This is a note"
             event.calendar = eventStore.defaultCalendarForNewEvents
             do {
               try eventStore.save(event, span: .thisEvent)
             } catch let error as NSError {
               print("failed to save event with error : \(error)")
+              result(FlutterError(code: "Add events error", message: "\(error)", details: nil))
+              return
             }
+
             print("Saved Event")
           }
           else{
